@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Game Uploader</title>
+    <title>GitHub Game Uploader (Pro)</title>
     <!-- 1. Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -23,13 +23,12 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center font-sans">
-    <div class="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full m-4">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-3xl w-full m-4">
 
         <!-- ===== PARENT SETUP (Hidden by default if settings are saved) ===== -->
         <div id="settings-panel">
             <h1 class="text-3xl font-bold text-center mb-4 text-gray-800">Uploader Setup</h1>
-            <p class="text-gray-600 mb-6 text-center">Hi Parent! Do this one-time setup. These settings will be saved in your browser's local storage so your kids don't see this.</p>
-            
+            <p class="text-gray-600 mb-6 text-center">Hi Parent! Do this one-time setup. These settings will be saved in your browser's local storage.</p>
             <div class="space-y-4">
                 <div>
                     <label for="github-user" class="block text-sm font-medium text-gray-700">GitHub Username</label>
@@ -40,7 +39,6 @@
                     <input type="password" id="github-token" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Paste your Fine-Grained token here (it's a secret!)">
                     <p class="mt-2 text-xs text-gray-500">Use a <b class="font-medium">Fine-grained token</b> with <b class="font-medium">Read/Write</b> for <pre class="inline rounded bg-gray-200 px-1 py-0.5">Contents</pre> and <b class="font-medium">Read-only</b> for <pre class="inline rounded bg-gray-200 px-1 py-0.5">Metadata</pre>.</p>
                 </div>
-                
                 <button id="save-settings" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300">
                     Save Settings & Start Uploading!
                 </button>
@@ -56,34 +54,46 @@
                 <div id="repo-wrapper">
                     <div id="repo-select-wrapper" class="hidden">
                         <label id="repo-label" for="repo-select" class="block text-xl font-medium text-gray-700 mb-2">1. Choose a Repository:</label>
-                        <select id="repo-select" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 text-lg focus:border-blue-500 focus:ring-blue-500">
-                            <option value="">Loading repositories...</option>
-                        </select>
+                        <select id="repo-select" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 text-lg focus:border-blue-500 focus:ring-blue-500"></select>
                     </div>
-                    <!-- This will show which repo is auto-selected -->
                     <div id="repo-display" class="hidden rounded-lg bg-gray-100 p-4">
                         <span class="text-gray-600">Uploading to:</span>
                         <strong id="repo-display-name" class="text-lg text-gray-900 ml-2"></strong>
                     </div>
                 </div>
 
-                <!-- 2. Game Name (now with datalist) -->
+                <!-- 2. Game Name (now a folder name) -->
                 <div>
-                    <label id="game-label" for="game-name" class="block text-xl font-medium text-gray-700 mb-2">1. Choose or Create a Game:</label>
-                    <input type="text" id="game-name" list="game-list" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 text-lg focus:border-blue-500 focus:ring-blue-500" placeholder="Type a new name or pick one...">
+                    <label id="game-label" for="game-name" class="block text-xl font-medium text-gray-700 mb-2">1. Choose or Create Game Folder:</label>
+                    <input type="text" id="game-name" list="game-list" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 text-lg focus:border-blue-500 focus:ring-blue-500" placeholder="Type a new game name or pick one...">
                     <datalist id="game-list">
-                        <!-- Existing game names will be populated here by JS -->
+                        <!-- Existing game folders will be populated here by JS -->
                     </datalist>
                 </div>
 
-                <!-- 3. Paste Code -->
+                <!-- 3. Code Paste Sections -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- HTML (Required) -->
+                    <div>
+                        <label id="code-label" for="code-html" class="block text-xl font-medium text-gray-700 mb-2">2. Paste <span class="text-red-500">*</span> <code class="text-lg">index.html</code> Code:</label>
+                        <textarea id="code-html" rows="12" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Paste the HTML code... (Required)"></textarea>
+                    </div>
+                    
+                    <!-- CSS (Optional) -->
+                    <div>
+                        <label id="style-label" for="code-css" class="block text-xl font-medium text-gray-700 mb-2">3. Paste <code class="text-lg">style.css</code> Code:</label>
+                        <textarea id="code-css" rows="12" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Paste the CSS code... (Optional)"></textarea>
+                    </div>
+                </div>
+                
+                <!-- JS (Optional) -->
                 <div>
-                    <label id="code-label" for="game-code" class="block text-xl font-medium text-gray-700 mb-2">2. Paste your game code here:</label>
-                    <textarea id="game-code" rows="10" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Paste the HTML code from Gemini..."></textarea>
+                    <label id="script-label" for="code-js" class="block text-xl font-medium text-gray-700 mb-2">4. Paste <code class="text-lg">script.js</code> Code:</label>
+                    <textarea id="code-js" rows="12" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-4 font-mono text-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Paste the JavaScript code... (Optional)"></textarea>
                 </div>
 
                 <button id="upload-button" class="w-full bg-green-600 text-white py-4 px-6 rounded-lg font-bold text-2xl shadow-xl hover:bg-green-700 transition duration-300 transform hover:scale-105">
-                    Upload!
+                    Upload All Files!
                 </button>
             </div>
 
@@ -99,6 +109,8 @@
 
     <script>
         // === App Logic ===
+        console.log("GitHub Game Uploader v2.0 (Pro/Folder-Mode)");
+
         const settingsPanel = document.getElementById('settings-panel');
         const uploaderPanel = document.getElementById('uploader-panel');
         const saveButton = document.getElementById('save-settings');
@@ -115,61 +127,53 @@
         const repoDisplayName = document.getElementById('repo-display-name');
         const repoSelectIn = document.getElementById('repo-select');
         const gameNameIn = document.getElementById('game-name');
-        const gameCodeIn = document.getElementById('game-code');
         const gameList = document.getElementById('game-list');
+        
+        // NEW: Code textareas
+        const codeHtmlIn = document.getElementById('code-html');
+        const codeCssIn = document.getElementById('code-css');
+        const codeJsIn = document.getElementById('code-js');
         
         // Labels for re-numbering
         const repoLabel = document.getElementById('repo-label');
         const gameLabel = document.getElementById('game-label');
         const codeLabel = document.getElementById('code-label');
+        const styleLabel = document.getElementById('style-label');
+        const scriptLabel = document.getElementById('script-label');
 
-        // This will hold the auto-selected repo name if there's only one
         let autoSelectedRepo = null;
 
-        // Function to load existing games for the selected repo
+        // Function to load existing games (folders) for the selected repo
         async function loadExistingGames(repo) {
             const user = localStorage.getItem('github_user');
             const token = localStorage.getItem('github_token');
             
-            gameList.innerHTML = ''; // Clear old game list
-            gameNameIn.value = ''; // Clear old game name
-            statusPanel.innerHTML = ''; // Clear old status
+            gameList.innerHTML = ''; 
+            gameNameIn.value = '';
+            statusPanel.innerHTML = ''; 
 
-            if (!user || !token || !repo) {
-                return;
-            }
+            if (!user || !token || !repo) return;
 
             const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/`;
-            const headers = {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-            };
+            const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
 
             try {
                 const response = await fetch(apiUrl, { headers });
-                if (response.status === 404) {
-                    // This happens if the repo is empty (no 'contents')
-                    console.log('Repo is empty, no games to list.');
-                    return;
-                }
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch game list (status ${response.status}).`);
-                }
+                if (response.status === 404) return; // Empty repo
+                if (!response.ok) throw new Error(`Failed to fetch game list (status ${response.status}).`);
                 
-                const files = await response.json();
+                const contents = await response.json();
                 
-                const htmlFiles = files.filter(file => 
-                    file.type === 'file' && 
-                    file.name.endsWith('.html') &&
-                    file.name !== 'index.html' // Ignore the uploader app itself
+                // NEW: We now look for directories, not files
+                const gameFolders = contents.filter(item => 
+                    item.type === 'dir'
                 );
 
-                if (htmlFiles.length === 0) return;
+                if (gameFolders.length === 0) return;
 
-                htmlFiles.forEach(file => {
-                    const gameName = file.name.replace(/\.html$/, ''); 
+                gameFolders.forEach(folder => {
                     const option = document.createElement('option');
-                    option.value = gameName;
+                    option.value = folder.name; // e.g., "tictac"
                     gameList.appendChild(option);
                 });
 
@@ -178,6 +182,47 @@
                 statusPanel.innerHTML = `<p class="text-red-500 font-semibold">Error: ${error.message}</p>`;
             }
         }
+        
+        // NEW: When a game folder is selected, auto-fill the text boxes
+        gameNameIn.addEventListener('change', async () => {
+            const repo = autoSelectedRepo || repoSelectIn.value;
+            const gameName = gameNameIn.value.trim();
+            if (!repo || !gameName) return;
+
+            // Clear boxes first
+            codeHtmlIn.value = 'Loading...';
+            codeCssIn.value = '';
+            codeJsIn.value = '';
+            
+            // Helper to fetch file content
+            const fetchFile = async (fileName) => {
+                const user = localStorage.getItem('github_user');
+                const token = localStorage.getItem('github_token');
+                const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${gameName}/${fileName}`;
+                const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+                
+                try {
+                    const response = await fetch(apiUrl, { headers });
+                    if (!response.ok) return null; // File might not exist
+                    const data = await response.json();
+                    // Decode from Base64
+                    return decodeURIComponent(escape(atob(data.content)));
+                } catch (e) {
+                    console.error(e);
+                    return null;
+                }
+            };
+
+            const [html, css, js] = await Promise.all([
+                fetchFile('index.html'),
+                fetchFile('style.css'),
+                fetchFile('script.js')
+            ]);
+
+            codeHtmlIn.value = html || ''; // html is required, but might be a new game
+            codeCssIn.value = css || '';
+            codeJsIn.value = js || '';
+        });
 
         // Function to load repositories
         async function loadRepositories() {
@@ -186,23 +231,17 @@
 
             if (!user || !token) return;
 
-            // Clear state
             autoSelectedRepo = null;
-            repoSelectIn.innerHTML = '<option value="">Loading repositories...</option>';
+            repoSelectIn.innerHTML = '<option value="">Loading...</option>';
             repoSelectIn.disabled = true;
             statusPanel.innerHTML = '';
             
             const apiUrl = `https://api.github.com/user/repos?sort=updated&per_page=100`;
-            const headers = {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-            };
+            const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
 
             try {
                 const response = await fetch(apiUrl, { headers });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch repos (status ${response.status}). Check PAT/username.`);
-                }
+                if (!response.ok) throw new Error(`Failed to fetch repos (status ${response.status}).`);
                 
                 const repos = await response.json();
                 const writeableRepos = repos.filter(repo => repo.permissions.push === true);
@@ -213,30 +252,25 @@
                     repoDisplay.classList.add('hidden');
                 
                 } else if (writeableRepos.length === 1) {
-                    // --- AUTO-SELECT LOGIC ---
                     const repoName = writeableRepos[0].name;
-                    autoSelectedRepo = repoName; // Set the global variable
-                    
-                    // Hide dropdown, show display
+                    autoSelectedRepo = repoName;
                     repoSelectWrapper.classList.add('hidden');
                     repoDisplay.classList.remove('hidden');
                     repoDisplayName.textContent = repoName;
                     
                     // Re-number steps
-                    gameLabel.textContent = "1. Choose or Create a Game:";
-                    codeLabel.textContent = "2. Paste your game code here:";
+                    gameLabel.textContent = "1. Choose or Create Game Folder:";
+                    codeLabel.textContent = '2. Paste * index.html Code:';
+                    styleLabel.textContent = '3. Paste style.css Code:';
+                    scriptLabel.textContent = '4. Paste script.js Code:';
                     
-                    // Load games for this one repo
                     loadExistingGames(repoName);
                 
                 } else {
-                    // --- MULTI-REPO LOGIC (Show Dropdown) ---
-                    autoSelectedRepo = null; // Unset global variable
-                    
-                    // Show dropdown, hide display
+                    autoSelectedRepo = null;
                     repoSelectWrapper.classList.remove('hidden');
                     repoDisplay.classList.add('hidden');
-                    repoSelectIn.innerHTML = ''; // Clear "loading"
+                    repoSelectIn.innerHTML = '';
                     
                     writeableRepos.forEach(repo => {
                         const option = document.createElement('option');
@@ -247,10 +281,11 @@
                     
                     // Re-number steps
                     repoLabel.textContent = "1. Choose a Repository:";
-                    gameLabel.textContent = "2. Choose or Create a Game:";
-                    codeLabel.textContent = "3. Paste your game code here:";
+                    gameLabel.textContent = "2. Choose or Create Game Folder:";
+                    codeLabel.textContent = '3. Paste * index.html Code:';
+                    styleLabel.textContent = '4. Paste style.css Code:';
+                    scriptLabel.textContent = '5. Paste script.js Code:';
 
-                    // Load games for the first repo in the list by default
                     loadExistingGames(writeableRepos[0].name);
                     repoSelectIn.disabled = false;
                 }
@@ -258,22 +293,15 @@
             } catch (error) {
                 console.error(error);
                 statusPanel.innerHTML = `<p class="text-red-500 font-semibold">Error: ${error.message}</p>`;
-                repoSelectWrapper.classList.add('hidden');
-                repoDisplay.classList.add('hidden');
             }
         }
 
         // Add event listener to reload games when (visible) repo dropdown changes
         repoSelectIn.addEventListener('change', () => {
-            const selectedRepo = repoSelectIn.value;
-            if (selectedRepo) {
-                loadExistingGames(selectedRepo);
-            } else {
-                gameList.innerHTML = '';
-            }
+            loadExistingGames(repoSelectIn.value);
         });
 
-        // On page load, check if settings are saved
+        // On page load
         window.addEventListener('load', () => {
             if (localStorage.getItem('github_user') && localStorage.getItem('github_token')) {
                 settingsPanel.classList.add('hidden');
@@ -285,19 +313,13 @@
             }
         });
 
-        // Save settings to localStorage
+        // Save settings
         saveButton.addEventListener('click', () => {
             const user = userIn.value.trim();
             const token = tokenIn.value.trim();
-
-            if (!user || !token) {
-                alert('Please fill in both Username and Token.');
-                return;
-            }
-
+            if (!user || !token) { alert('Please fill in both Username and Token.'); return; }
             localStorage.setItem('github_user', user);
             localStorage.setItem('github_token', token);
-
             settingsPanel.classList.add('hidden');
             uploaderPanel.classList.remove('hidden');
             loadRepositories();
@@ -305,37 +327,35 @@
 
         // Reset settings
         resetButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to reset the settings? You will need to enter the GitHub details again.')) {
-                localStorage.clear(); // Clear everything
-                
+            if (confirm('Are you sure you want to reset the settings?')) {
+                localStorage.clear(); 
                 userIn.value = '';
                 tokenIn.value = '';
                 autoSelectedRepo = null;
-
                 settingsPanel.classList.remove('hidden');
                 uploaderPanel.classList.add('hidden');
                 statusPanel.innerHTML = '';
-                repoSelectIn.innerHTML = '<option value="">Loading repositories...</option>';
-                gameList.innerHTML = '';
-                repoSelectWrapper.classList.add('hidden');
-                repoDisplay.classList.add('hidden');
             }
         });
 
-        // Main upload function
+        // === Main Upload Function ===
         uploadButton.addEventListener('click', async () => {
-            // NEW: Get repo name from auto-select first, or dropdown as fallback
             const repo = autoSelectedRepo || repoSelectIn.value;
             const gameName = gameNameIn.value.trim();
-            const gameCode = gameCodeIn.value;
+            const htmlContent = codeHtmlIn.value.trim();
+            const cssContent = codeCssIn.value.trim();
+            const jsContent = codeJsIn.value.trim();
 
             if (!repo) {
                 statusPanel.innerHTML = '<p class="text-red-500 font-semibold">Please choose a repository!</p>';
                 return;
             }
-
-            if (!gameName || !gameCode) {
-                statusPanel.innerHTML = '<p class="text-red-500 font-semibold">Please add a name and paste your game code!</p>';
+            if (!gameName) {
+                statusPanel.innerHTML = '<p class="text-red-500 font-semibold">Please add a game name!</p>';
+                return;
+            }
+            if (!htmlContent) {
+                statusPanel.innerHTML = '<p class="text-red-500 font-semibold">The index.html code is required!</p>';
                 return;
             }
 
@@ -347,49 +367,72 @@
                 return;
             }
 
-            statusPanel.innerHTML = '<div class="flex justify-center items-center"><div class="loader mr-3"></div><p class="text-gray-700">Uploading to GitHub...</p></div>';
+            statusPanel.innerHTML = '<div class="flex justify-center items-center"><div class="loader mr-3"></div><p class="text-gray-700">Uploading files...</p></div>';
             uploadButton.disabled = true;
             uploadButton.classList.add('opacity-50', 'cursor-not-allowed');
 
-            const fileName = gameName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') + '.html';
-            const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${fileName}`;
-            const encodedContent = btoa(unescape(encodeURIComponent(gameCode)));
-            const headers = {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-            };
+            // --- Helper function for a single file upload ---
+            const uploadFile = async (fileName, fileContent) => {
+                // If content is empty, just skip this file
+                if (!fileContent) return { success: true, skipped: true }; 
+                
+                const filePath = `${gameName}/${fileName}`;
+                const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${filePath}`;
+                const headers = { 
+                    'Authorization': `token ${token}`, 
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                };
+                
+                // btoa trick for UTF-8
+                const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
 
-            let sha = null;
-
-            try {
-                // Check if file exists to get its SHA (for updating)
-                const getResponse = await fetch(apiUrl, { headers });
-                if (getResponse.ok) {
-                    const fileData = await getResponse.json();
-                    sha = fileData.sha; 
-                }
-
-                // Create or Update the file
+                let sha = null;
+                try {
+                    // 1. Check if file exists to get SHA
+                    const getResponse = await fetch(apiUrl, { headers: { ...headers } }); // remove content-type
+                    if (getResponse.ok) {
+                        sha = (await getResponse.json()).sha;
+                    }
+                } catch (e) { /* File doesn't exist, which is fine */ }
+                
+                // 2. Create or Update file
                 const body = {
-                    message: `Upload game: ${gameName}`,
+                    message: `Upload game file: ${filePath}`,
                     content: encodedContent,
-                    ...(sha && { sha: sha }) // Add sha to body ONLY if it exists
+                    ...(sha && { sha: sha }) // Add sha if it exists (for updates)
                 };
 
-                const putResponse = await fetch(apiUrl, {
-                    method: 'PUT',
-                    headers: { ...headers, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-
-                if (!putResponse.ok) {
-                    const error = await putResponse.json();
-                    throw new Error(error.message || 'Failed to upload to GitHub.');
+                try {
+                    const putResponse = await fetch(apiUrl, {
+                        method: 'PUT',
+                        headers: headers,
+                        body: JSON.stringify(body)
+                    });
+                    if (!putResponse.ok) {
+                        throw new Error(`Failed to upload ${fileName}: ${(await putResponse.json()).message}`);
+                    }
+                    return { success: true };
+                } catch (error) {
+                    return { success: false, error: error.message };
                 }
-                
-                // Show Success!
-                const userForUrl = localStorage.getItem('github_user');
-                const liveUrl = `https://${userForUrl}.github.io/${repo}/${fileName}`;
+            };
+            
+            // --- Run all uploads ---
+            try {
+                const results = await Promise.all([
+                    uploadFile('index.html', htmlContent),
+                    uploadFile('style.css', cssContent),
+                    uploadFile('script.js', jsContent)
+                ]);
+
+                const failures = results.filter(r => !r.success);
+                if (failures.length > 0) {
+                    throw new Error(failures.map(f => f.error).join(', '));
+                }
+
+                // --- 3. Show Success! ---
+                const liveUrl = `https://${user}.github.io/${repo}/${gameName}/`;
                 statusPanel.innerHTML = `
                     <h3 class="text-2xl font-bold text-green-600 mb-4">Success!</h3>
                     <p class="text-gray-700 mb-4">Your game is live! Click the link to play:</p>
@@ -398,16 +441,17 @@
                     </a>
                 `;
                 
+                // Clear inputs and refresh game list
                 gameNameIn.value = '';
-                gameCodeIn.value = '';
-                // Refresh the game list
+                codeHtmlIn.value = '';
+                codeCssIn.value = '';
+                codeJsIn.value = '';
                 loadExistingGames(repo); 
 
             } catch (error) {
                 console.error(error);
-                statusPanel.innerHTML = `<p class="text-red-500 font-semibold">Error: ${error.message}. Check console or PAT permissions.</p>`;
+                statusPanel.innerHTML = `<p class="text-red-500 font-semibold">Error: ${error.message}</p>`;
             } finally {
-                // Re-enable button
                 uploadButton.disabled = false;
                 uploadButton.classList.remove('opacity-50', 'cursor-not-allowed');
             }
